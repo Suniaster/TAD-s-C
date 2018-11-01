@@ -12,7 +12,7 @@ typedef struct Something{
     // Mais coisa pra baixo
 }Geral;
 
-int Insere(Tnode** N, void *aInserir);
+int InsereAVL(Tnode** N, void *aInserir);
 void printInOrder(Tnode *N);
 void FreeArvore(Tnode **N);
 

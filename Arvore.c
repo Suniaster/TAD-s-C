@@ -81,7 +81,7 @@ int Repara(Tnode** N){
 
 }
 
-int Insere(Tnode** N, void *aInserir){
+int InsereAVL(Tnode** N, void *aInserir){
     if((*N)==NULL){
         (*N) = (Tnode*) malloc(sizeof(Tnode));
         (*N)->inf = aInserir;

@@ -11,7 +11,7 @@ int main(){
     for(int i=0;i<10;i++){
         Varios[i] = (Geral*)malloc(sizeof(Geral));
         Varios[i]->key = i;
-        Insere(&Root, Varios[i]);
+        InsereAVL(&Root, Varios[i]);
     }
     Varios[10] = (Geral*)malloc(sizeof(Geral));
     Varios[11] = (Geral*)malloc(sizeof(Geral));
@@ -21,9 +21,9 @@ int main(){
     Varios[11]->key = 56;
     Varios[12]->key = 7;
 
-    Insere(&Root, Varios[10]);
-    Insere(&Root, Varios[11]);
-    Insere(&Root, Varios[12]);  
+    InsereAVL(&Root, Varios[10]);
+    InsereAVL(&Root, Varios[11]);
+    InsereAVL(&Root, Varios[12]);  
     printInOrder(Root);
 
     FreeArvore(&Root);
