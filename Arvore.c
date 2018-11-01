@@ -18,16 +18,30 @@ void RSE(Tnode** N){
     aux->left = (*N);
     (*N) = aux;
 }
+int Altura(Tnode* N){
+    int esq, dir;
+
+    if(N == NULL){
+        return 0;
+    }
+    esq = Altura(N->left);
+    dir = Altura(N->right);
+
+    if(esq < dir){
+        return esq + 1;
+    }   
+    else{
+        return dir + 1;
+    } 
+}
 
 int FB(Tnode* N){
 
     if(N==NULL){
         return 0;
     }
-    int left = FB(N->left)+1;
-    int right = FB(N->right)+1;
 
-    return (left > right ? left:right);
+    return Altura(N->left) - Altura(N->right);
 }
 
 int Repara(Tnode** N){
@@ -35,11 +49,11 @@ int Repara(Tnode** N){
     int pivo;
     int pLeft, pRight;
     Tnode* aux;
-    pivo = FB((*N)->left)-FB((*N)->right);
+    pivo = FB((*N));
 
     if(pivo<-1){
         aux = (*N)->right;
-        pRight = FB(aux->left)-FB(aux->right);
+        pRight = FB(aux->right);
 
         if(pRight < 0){
             RSE(&(*N));
@@ -52,7 +66,7 @@ int Repara(Tnode** N){
     }
     if(pivo>1){
         aux = (*N)->left;
-        pLeft = FB(aux->left)-FB(aux->right);
+        pLeft = FB(aux->left);
 
         if(pLeft > 0){
             RSD(&(*N));

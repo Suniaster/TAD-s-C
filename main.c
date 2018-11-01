@@ -18,7 +18,7 @@ int main(){
     Varios[12] = (Geral*)malloc(sizeof(Geral));
     
     Varios[10]->key = 55;
-    Varios[11]->key = 5;
+    Varios[11]->key = 56;
     Varios[12]->key = 7;
 
     Insere(&Root, Varios[10]);
