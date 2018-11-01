@@ -44,7 +44,7 @@ int Repara(Tnode** N){
         if(pRight < 0){
             RSE(&(*N));
         }
-        else{
+        if(pRight > 0){
             RSD(&aux);
             RSE(&(*N));
         }
@@ -57,7 +57,7 @@ int Repara(Tnode** N){
         if(pLeft > 0){
             RSD(&(*N));
         }
-        else{
+        if(pLeft < 0){
             RSE(&aux);
             RSD(&(*N));
         }
