@@ -42,11 +42,11 @@ int Repara(Tnode** N){
         pRight = FB(aux->left)-FB(aux->right);
 
         if(pRight < 0){
-            RSE((*N));
+            RSE(&(*N));
         }
         else{
-            RSD(aux);
-            RSE((*N));
+            RSD(&aux);
+            RSE(&(*N));
         }
         return 1;
     }
@@ -55,11 +55,11 @@ int Repara(Tnode** N){
         pLeft = FB(aux->left)-FB(aux->right);
 
         if(pLeft > 0){
-            RSD((*N));
+            RSD(&(*N));
         }
         else{
-            RSE(aux);
-            RSD((*N));
+            RSE(&aux);
+            RSD(&(*N));
         }
         return 1;
     }
@@ -71,17 +71,20 @@ int Insere(Tnode** N, void *aInserir){
     if((*N)==NULL){
         (*N) = (Tnode*) malloc(sizeof(Tnode));
         (*N)->inf = aInserir;
+        (*N)->left =NULL;
+        (*N)->right =NULL;
         return 1;
     }
     else{
-
-        if((Geral*)aInserir->key > (*N)->inf->key ){
-            Insere((*N)->right,aInserir);
+        Geral *auxInsere = aInserir;
+        Geral *auxNode = (*N)->inf;
+        if(auxInsere->key > auxNode->key ){
+            Insere(&(*N)->right,aInserir);
         }
         else{
-            Insere((*N)->left, aInserir);
+            Insere(&(*N)->left, aInserir);
         }
-        Repara((*N));
+        Repara(&(*N));
         return 0;
     }
 }
@@ -91,7 +94,18 @@ void printInOrder(Tnode *N){
     if(N==NULL){
         return ;
     }
+    Geral *Aux = N->inf;
     printInOrder(N->left);
-    printf("%d\n",N->inf->key);
+    printf("%d\n",Aux->key);
     printInOrder(N->right);
+}
+
+void FreeArvore(Tnode **N){
+    if((*N) == NULL){
+        return;
+    }
+    FreeArvore(&(*N)->left);
+    FreeArvore(&(*N)->right);
+    free((*N)->inf);
+    free((*N));
 }
