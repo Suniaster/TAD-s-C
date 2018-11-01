@@ -85,3 +85,13 @@ int Insere(Tnode** N, void *aInserir){
         return 0;
     }
 }
+
+void printInOrder(Tnode *N){
+
+    if(N==NULL){
+        return ;
+    }
+    printInOrder(N->left);
+    printf("%d\n",N->inf->key);
+    printInOrder(N->right);
+}
