@@ -24,6 +24,7 @@ int main(){
     InsereAVL(&Root, Varios[10]);
     InsereAVL(&Root, Varios[11]);
     InsereAVL(&Root, Varios[12]);  
+
     printInOrder(Root);
 
     FreeArvore(&Root);

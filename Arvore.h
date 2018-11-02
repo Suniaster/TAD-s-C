@@ -13,7 +13,10 @@ typedef struct Something{
 }Geral;
 
 int InsereAVL(Tnode** N, void *aInserir);
-void printInOrder(Tnode *N);
 void FreeArvore(Tnode **N);
+void* ProcuraAVL(Tnode *N, int aProcurar);
 
+void printInOrder(Tnode *N);
+void printPosOrder(Tnode *N);
+void printPreOrder(Tnode *N);
 #endif

@@ -27,7 +27,7 @@ int Altura(Tnode* N){
     esq = Altura(N->left);
     dir = Altura(N->right);
 
-    if(esq < dir){
+    if(esq > dir){
         return esq + 1;
     }   
     else{
@@ -36,11 +36,9 @@ int Altura(Tnode* N){
 }
 
 int FB(Tnode* N){
-
     if(N==NULL){
         return 0;
     }
-
     return Altura(N->left) - Altura(N->right);
 }
 
@@ -53,7 +51,7 @@ int Repara(Tnode** N){
 
     if(pivo<-1){
         aux = (*N)->right;
-        pRight = FB(aux->right);
+        pRight = FB(aux);
 
         if(pRight < 0){
             RSE(&(*N));
@@ -66,7 +64,7 @@ int Repara(Tnode** N){
     }
     if(pivo>1){
         aux = (*N)->left;
-        pLeft = FB(aux->left);
+        pLeft = FB(aux);
 
         if(pLeft > 0){
             RSD(&(*N));
@@ -93,10 +91,10 @@ int InsereAVL(Tnode** N, void *aInserir){
         Geral *auxInsere = aInserir;
         Geral *auxNode = (*N)->inf;
         if(auxInsere->key > auxNode->key ){
-            Insere(&(*N)->right,aInserir);
+            InsereAVL(&(*N)->right,aInserir);
         }
         else{
-            Insere(&(*N)->left, aInserir);
+            InsereAVL(&(*N)->left, aInserir);
         }
         Repara(&(*N));
         return 0;
@@ -113,6 +111,38 @@ void printInOrder(Tnode *N){
     printf("%d\n",Aux->key);
     printInOrder(N->right);
 }
+void printPreOrder(Tnode *N){
+
+    if(N==NULL){
+        return ;
+    }
+    Geral *Aux = N->inf;
+    printf("%d ",Aux->key);
+    Geral *aux2;
+    if(N->left != NULL){
+        aux2 = N->left->inf;
+        printf("Filho da esquerda: %d ||", aux2->key);
+    }
+    if(N->right != NULL){
+        aux2 = N->right->inf;
+        printf("Filho da Direita: %d", aux2->key);
+    }
+
+    printf("\n");
+    printPreOrder(N->left);
+    printPreOrder(N->right);
+}
+void printPosOrder(Tnode *N){
+
+    if(N==NULL){
+        return ;
+    }
+    Geral *Aux = N->inf;
+    printPosOrder(N->left);
+    printPosOrder(N->right);
+    printf("%d\n",Aux->key);    
+}
+
 
 void FreeArvore(Tnode **N){
     if((*N) == NULL){
@@ -122,4 +152,8 @@ void FreeArvore(Tnode **N){
     FreeArvore(&(*N)->right);
     free((*N)->inf);
     free((*N));
+}
+
+void* ProcuraAVL(Tnode *N, int aProcurar){
+
 }
