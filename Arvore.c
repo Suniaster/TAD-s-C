@@ -155,5 +155,16 @@ void FreeArvore(Tnode **N){
 }
 
 void* ProcuraAVL(Tnode *N, int aProcurar){
-
+    if(N == NULL){
+        return NULL;
+    }
+    Geral* Aux;
+    Aux = N->inf;
+    if(aProcurar > Aux->key){
+        return ProcuraAVL(N->right, aProcurar);
+    }
+    if(aProcurar < Aux->key){
+        return ProcuraAVL(N->left, aProcurar);
+    }
+    return N->inf;
 }
