@@ -2,7 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+/*  Rotação Simples Direita:
+    Feita quando há um desebalanceamento a esquerda do nó passado como paramêtro
+    e também um desbalanceamento a esquerda em seu filho da esquerda.
+        X                    Y
+       /                    / \
+      Y       RSD(X) ->    X   Z
+     / 
+    Z  
+    É passado como parâmetro o nó onde o desbalanceamento é maior que 1.
+*/
 void RSD(Tnode** N){
     Tnode* aux;
     aux = (*N)->left;
@@ -11,6 +20,16 @@ void RSD(Tnode** N){
     (*N) = aux;
 }
 
+/*  Rotação Simples Esquerda:
+    Feita quando há um desebalanceamento a direita do nó passado como paramêtro
+    e também um desbalanceamento a direita em seu filho da direita.
+    X                       Y
+     \                     / \
+      Y       RSE(X)->    X   Z
+       \
+        Z     
+    É passado como parâmetro o nó onde o Fator de Balancealemto é menor que -1.    
+*/
 void RSE(Tnode** N){
     Tnode* aux;
     aux = (*N)->right;
@@ -18,6 +37,8 @@ void RSE(Tnode** N){
     aux->left = (*N);
     (*N) = aux;
 }
+
+//  Calcula a altura de determinado nó, usando estratégia recursiva
 int Altura(Tnode* N){
     int esq, dir;
 
@@ -35,6 +56,11 @@ int Altura(Tnode* N){
     } 
 }
 
+/*  Fator de Balanceamento:
+    O FB de um determinado nó é dado pela altura da arvore do seu filho a esquerda menos
+    a altura da arvore do seu filho a direita.
+    Dessa forma é possível saber se algum dos lados da arvore está maior que o outro.
+*/
 int FB(Tnode* N){
     if(N==NULL){
         return 0;
@@ -42,6 +68,30 @@ int FB(Tnode* N){
     return Altura(N->left) - Altura(N->right);
 }
 
+/* Função para concertar o balanceamento de determinado nó:
+    Primeiramente é chamada a função do Fator de Balancemento.
+    Caso haja algum desbalaceamento, ele é concertado usando
+    uma rotação simples, ou uma rotação dupla.
+    --Rotação dupla:
+      0               0
+     /                 \
+    0         ou        0
+     \                 /
+      0               0
+    A rotação dupla consiste de duas rotações simples em sequencia, uma
+    aplicada no filho que esteja desbalanceado e outra no próprio nó.
+    Exemplo:
+      X                  X                Z
+     /                  /                / \
+    Y      RSE(Y)->    Z    RSD(X)->    Y   X
+     \                /  
+      Z              Y
+    Analogamente, para o caso inverso onde há a necessidade de Rotação dupla, é 
+    usado o mesmo procedimento, porém é primeiro feito RSD e depois RSE.
+
+    Retorna 1 caso tenha acontecido alguma mudança na árvore.
+    Retorna 0 caso contrário.
+*/
 int Repara(Tnode** N){
 
     int pivo;
@@ -79,6 +129,24 @@ int Repara(Tnode** N){
 
 }
 
+/*  Função de Inserção na Ávore AVL:
+    Recebe como parâmetro a raiz da Arvore que está o elemento será inserido,
+    e também um ponteiro para alguma estrutura que possua o atributo "key" (IMPORTANTE).
+    Na forma como foi implementada, há o uso de uma estrutura auxiliar chamada "Geral",
+    portanto, para casos específicos de uso, é necessária a troca dessa estrutura.
+
+    Para a inserção de elementos na Árvore AVL, o o filho da esquerda deve ser menor ou 
+    igual a seu pai, e o filho da direita deve ser maior ou igual ao mesmo. 
+
+    Função Recursiva.
+
+    Para chegar a uma folha é necessário log(n) chamadas recursivas.
+
+    Inserções só são feitas nas folhas da arvore, e caso essa inserção crie algum desba-
+    lanceamento, para cada nó que estava no caminho até a inserção é procurado se ele possui
+    algum desbalanceamento.
+
+*/
 int InsereAVL(Tnode** N, void *aInserir){
     if((*N)==NULL){
         (*N) = (Tnode*) malloc(sizeof(Tnode));
@@ -101,16 +169,14 @@ int InsereAVL(Tnode** N, void *aInserir){
     }
 }
 
-void printInOrder(Tnode *N){
-
-    if(N==NULL){
-        return ;
-    }
-    Geral *Aux = N->inf;
-    printInOrder(N->left);
-    printf("%d\n",Aux->key);
-    printInOrder(N->right);
-}
+    /* Funções de Print */
+/*  Método Pre-Order:
+    -> É feito determinado processo no nó; 
+    -> Chama-se recursivamente a função pro seu filho a esquerda;
+    -> Chama-se recursivamente a função pro seu filho a direita;
+    Usado para conferir formato da árvore,
+    elementos são printados mostrando quem são seus filhos.
+*/
 void printPreOrder(Tnode *N){
 
     if(N==NULL){
@@ -132,6 +198,35 @@ void printPreOrder(Tnode *N){
     printPreOrder(N->left);
     printPreOrder(N->right);
 }
+/*  Método In-Order:
+    -> Chama-se recursivamente a função pro seu filho a esquerda;
+    -> É feito determinado processo no nó; 
+    -> Chama-se recursivamente a função pro seu filho a direita;
+    Elementos são printados em ordem crescente
+*/
+void printInOrder(Tnode *N){
+
+    if(N==NULL){
+        return ;
+    }
+    Geral *Aux = N->inf;
+    printInOrder(N->left);
+    printf("%d\n",Aux->key);
+    printInOrder(N->right);
+}
+/* Método Pós-Order:
+    -> Chama-se recursivamente a função pro seu filho a esquerda;
+    -> Chama-se recursivamente a função pro seu filho a direita;    
+    -> É feito determinado processo no nó;
+    Passa por cada nivel de altura da arvore, começando do mais inferior e indo
+    da equerda para a direita.
+    Ex:     A
+           / \
+          B   C
+         / \ / \
+        D  E F  G
+    Ordem: D E F G B C A;     
+*/     
 void printPosOrder(Tnode *N){
 
     if(N==NULL){
@@ -143,17 +238,14 @@ void printPosOrder(Tnode *N){
     printf("%d\n",Aux->key);    
 }
 
-
-void FreeArvore(Tnode **N){
-    if((*N) == NULL){
-        return;
-    }
-    FreeArvore(&(*N)->left);
-    FreeArvore(&(*N)->right);
-    free((*N)->inf);
-    free((*N));
-}
-
+/*  Procura por determinada "key" na árvore AVL:
+    - Verifica se o elemento já foi encontrado;
+    - Caso sim: retorna-o;
+    - Caso não: Chama recursivamente a função:
+        -Para seu filho a esquerda, caso a "key" seja menor do que a informação do nó;
+        -Para seu filho a direita, caso a "key" seja maior do que a informação do nó;
+    Em caso ne não encontrar a key, retorna "NULL"
+*/
 void* ProcuraAVL(Tnode *N, int aProcurar){
     if(N == NULL){
         return NULL;
@@ -167,4 +259,19 @@ void* ProcuraAVL(Tnode *N, int aProcurar){
         return ProcuraAVL(N->left, aProcurar);
     }
     return N->inf;
+}
+
+/*  Liberação dos dados alocados pela árvore.
+    As estruturas que nela estão armazenadas também são
+    liberadas.
+    Utiliza-se do metodo Pós-Order.
+*/
+void FreeArvore(Tnode **N){
+    if((*N) == NULL){
+        return;
+    }
+    FreeArvore(&(*N)->left);
+    FreeArvore(&(*N)->right);
+    free((*N)->inf);
+    free((*N));
 }
