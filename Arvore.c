@@ -7,7 +7,7 @@
     e também um desbalanceamento a esquerda em seu filho da esquerda.
         X                    Y
        /                    / \
-      Y       RSD(X) ->    X   Z
+      Y       RSD(X) ->    Z   X
      / 
     Z  
     É passado como parâmetro o nó onde o desbalanceamento é maior que 1.
@@ -143,7 +143,7 @@ int Repara(Tnode** N){
     Para chegar a uma folha é necessário log(n) chamadas recursivas.
 
     Inserções só são feitas nas folhas da arvore, e caso essa inserção crie algum desba-
-    lanceamento, para cada nó que estava no caminho até a inserção é procurado se ele possui
+    lanceamento, para cada nó que estava no caminho até a inserção é verificado se ele possui
     algum desbalanceamento.
 
 */
@@ -176,6 +176,12 @@ int InsereAVL(Tnode** N, void *aInserir){
     -> Chama-se recursivamente a função pro seu filho a direita;
     Usado para conferir formato da árvore,
     elementos são printados mostrando quem são seus filhos.
+     Ex:    A
+           / \
+          B   C
+         / \ / \
+        D  E F  G
+    Ordem: A B D E C F G
 */
 void printPreOrder(Tnode *N){
 
@@ -198,6 +204,7 @@ void printPreOrder(Tnode *N){
     printPreOrder(N->left);
     printPreOrder(N->right);
 }
+
 /*  Método In-Order:
     -> Chama-se recursivamente a função pro seu filho a esquerda;
     -> É feito determinado processo no nó; 
@@ -214,6 +221,7 @@ void printInOrder(Tnode *N){
     printf("%d\n",Aux->key);
     printInOrder(N->right);
 }
+
 /* Método Pós-Order:
     -> Chama-se recursivamente a função pro seu filho a esquerda;
     -> Chama-se recursivamente a função pro seu filho a direita;    
@@ -244,7 +252,7 @@ void printPosOrder(Tnode *N){
     - Caso não: Chama recursivamente a função:
         -Para seu filho a esquerda, caso a "key" seja menor do que a informação do nó;
         -Para seu filho a direita, caso a "key" seja maior do que a informação do nó;
-    Em caso ne não encontrar a key, retorna "NULL"
+    Em caso ne não encontrar a key, ou seja, quando chegar em uma folha inexistente, retorna "NULL"
 */
 void* ProcuraAVL(Tnode *N, int aProcurar){
     if(N == NULL){
