@@ -3,7 +3,7 @@
 #include "Arvore.h"
 #include <time.h>
 
-#define SIZE 1048576
+#define SIZE 1000
 int main(){
 
     Geral** Varios;

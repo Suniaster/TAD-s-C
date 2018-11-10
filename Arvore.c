@@ -51,10 +51,10 @@ int Altura(Tnode* N){
     }
     int left, right;
 
-    if(N->left == NULL)left=0;
+    if(N->left == NULL)left=-1;
     else left = N->left->height;
 
-    if(N->right == NULL)right=0;
+    if(N->right == NULL)right=-1;
     else right = N->right->height;
 
     if(left>right)return left+1;
@@ -200,7 +200,6 @@ int InsereAVL(Tnode** N, void *aInserir){
         return 1;
     }
     else{
-        (*N)->height=Altura((*N));
         Geral *auxInsere = aInserir;
         Geral *auxNode = (*N)->inf;
         if(auxInsere->key > auxNode->key ){
@@ -212,6 +211,7 @@ int InsereAVL(Tnode** N, void *aInserir){
         if(Repara(&(*N))){
             RecalculaAltura(&(*N));
         }
+        (*N)->height=Altura((*N));
         return 0;
     }
 }
