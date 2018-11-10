@@ -11,6 +11,7 @@
      / 
     Z  
     É passado como parâmetro o nó onde o desbalanceamento é maior que 1.
+    O(1)
 */
 void RSD(Tnode** N){
     Tnode* aux;
@@ -29,6 +30,7 @@ void RSD(Tnode** N){
        \
         Z     
     É passado como parâmetro o nó onde o Fator de Balancealemto é menor que -1.    
+    O(1)
 */
 void RSE(Tnode** N){
     Tnode* aux;
@@ -38,34 +40,68 @@ void RSE(Tnode** N){
     (*N) = aux;
 }
 
-//  Calcula a altura de determinado nó, usando estratégia recursiva
+/*  Calcula a altura de determinado nó 
+    Vê se qual altura das arvores filhas é maior,
+    e baseado nisso, sua altura é a decidida + 1;
+    O(1);
+*/
 int Altura(Tnode* N){
-    int esq, dir;
-
-    if(N == NULL){
+    if(N==NULL){
         return 0;
     }
-    esq = Altura(N->left);
-    dir = Altura(N->right);
+    int left, right;
 
-    if(esq > dir){
-        return esq + 1;
-    }   
+    if(N->left == NULL)left=-1;
+    else left = N->left->height;
+
+    if(N->right == NULL)right=-1;
+    else right = N->right->height;
+
+    if(left>right)return left+1;
+    else return right+1;
+}
+
+/*  Passa em todos os nós abaixo do que foi passado como parametro
+    e atualiza a altura dos mesmos.
+    O(n), sendo n o tamanho da arvore abaixo do nó que foi passado.
+*/
+int RecalculaAltura(Tnode **N){
+    if((*N)==NULL){
+        return 0;
+    }
+    int leftHeight, rightHeight;
+    leftHeight = RecalculaAltura(&(*N)->left);
+    rightHeight = RecalculaAltura(&(*N)->right);
+
+    if(leftHeight > rightHeight){
+        (*N)->height = leftHeight+1;
+        return (*N)->height;
+    }
     else{
-        return dir + 1;
-    } 
+        (*N)->height = rightHeight+1;
+        return (*N)->height;
+    }
 }
 
 /*  Fator de Balanceamento:
     O FB de um determinado nó é dado pela altura da arvore do seu filho a esquerda menos
     a altura da arvore do seu filho a direita.
     Dessa forma é possível saber se algum dos lados da arvore está maior que o outro.
+    O(1)
 */
 int FB(Tnode* N){
     if(N==NULL){
         return 0;
     }
-    return Altura(N->left) - Altura(N->right);
+    int left, right;
+
+    if(N->left == NULL)left=0;
+    else left = N->left->height;
+
+    if(N->right == NULL)right=0;
+    else right = N->right->height;
+
+    return left-right;
 }
 
 /* Função para concertar o balanceamento de determinado nó:
@@ -91,6 +127,7 @@ int FB(Tnode* N){
 
     Retorna 1 caso tenha acontecido alguma mudança na árvore.
     Retorna 0 caso contrário.
+    O(1)
 */
 int Repara(Tnode** N){
 
@@ -142,10 +179,16 @@ int Repara(Tnode** N){
 
     Para chegar a uma folha é necessário log(n) chamadas recursivas.
 
-    Inserções só são feitas nas folhas da arvore, e caso essa inserção crie algum desba-
-    lanceamento, para cada nó que estava no caminho até a inserção é verificado se ele possui
-    algum desbalanceamento.
-
+    Caso a função "Recalcula" retorne 1, ou seja, caso haja alguma mudança
+    no formato da arvore causado pela inserção, é recalculada a altura de todos
+    os nós abaixo desse. 
+    
+    ** Comentarios:
+        O(logn + n') -> ERRADO, mas não sei como faz certo. kkkk :(
+        
+        Espera-se que a quantidade de chamadas da função RecalculaAltura() seja < log n, porém 
+        não sei como conluir algo em relação a complexidade dessa parte da função.
+    
 */
 int InsereAVL(Tnode** N, void *aInserir){
     if((*N)==NULL){
@@ -153,6 +196,7 @@ int InsereAVL(Tnode** N, void *aInserir){
         (*N)->inf = aInserir;
         (*N)->left =NULL;
         (*N)->right =NULL;
+        (*N)->height=0;
         return 1;
     }
     else{
@@ -164,7 +208,10 @@ int InsereAVL(Tnode** N, void *aInserir){
         else{
             InsereAVL(&(*N)->left, aInserir);
         }
-        Repara(&(*N));
+        if(Repara(&(*N))){
+            RecalculaAltura(&(*N));
+        }
+        (*N)->height=Altura((*N));
         return 0;
     }
 }

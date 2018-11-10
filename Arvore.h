@@ -4,6 +4,7 @@
 typedef struct TreeNode{
     struct TreeNode* left;
     struct TreeNode* right;
+    int height;
     void* inf;
 }Tnode;
 
